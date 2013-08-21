@@ -60,8 +60,24 @@ bool test(int N)
     points.push_back(p);
   }
 
+  clock_t t;
+
+  printf("| tree construction started... ");
+  fflush(stdout);
+  t = clock();
   range_tree rt(points);
+  t = clock() - t;
+  printf("done (took %f sec)\n", (double)t/CLOCKS_PER_SEC);
+
+  printf("| *info* count = %d\n", count);
+
+  printf("| quering stared... ");
+  fflush(stdout);
+  t = clock();
   rt.query(min, max);		// query!
+  t = clock() - t;
+  printf("done (took %f sec)\n", (double)t/CLOCKS_PER_SEC);
+
   if (rt.result().size() != count) {
     std::cout << "expected\tmin : ";
     std::cout << stringify(min);
@@ -88,23 +104,25 @@ bool test(int N)
 
 int main()
 {
-  srand(10);
+  clock_t t;
 
-  for (int i = 0; i < 5; ++i) {
+  srand(100);
+
+  for (int i = 0; i < 6; ++i) {
     int N = pow(10, i);
 
-    clock_t t;
-
+    printf("* test %d stated... (N=%d)\n", i, N);
+    fflush(stdout);
     t = clock();
     bool success = test(N);
     t = clock() - t;
 
     if (! success) {
-      printf("test failure in N=%d\n", N);
+      printf("***test failure in N=%d\n", N);
       std::abort();
     }
 
-    printf("* test %d successfull (N=%d, took %f sec)\n", i, N, (double)t/CLOCKS_PER_SEC);
+    printf("* test %d successfull (took %f sec)\n\n", i, (double)t/CLOCKS_PER_SEC);
   }
 
   puts("All tests successfull!");
